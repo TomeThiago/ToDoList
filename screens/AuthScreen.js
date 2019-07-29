@@ -34,6 +34,7 @@ class AuthScreen extends React.Component {
 	render() {
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+				<StatusBar hidden/>
 				<View style={styles.logoContainer}>
                     <Image source={require('../assets/images/icon.png')} style={styles.logo} />
                 </View>
@@ -49,7 +50,8 @@ class AuthScreen extends React.Component {
 					returnKeyType='go'
 					secureTextEntry={true}
 					ref={(input) => this.passwordInput = input}
-					autoCapitalize={false}
+					autoCapitalize="none"
+          autoCorrect={false}
 					onSubmitEditing={() => this._inAutheticated()} 
 					value={this.state.password}
 					onChangeText={password => this.setState({password})}
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
 	logoContainer: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginBottom: 10,
+		marginBottom: 25,
 	},
 
 	logo: {
