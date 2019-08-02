@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { View, StyleSheet, FlatList, Text, ToastAndroid, KeyboardAvoidingView } from 'react-native';
-import { Checkbox, FAB, TextInput, Button } from 'react-native-paper';
+import { View, StyleSheet, FlatList, Text, ToastAndroid, KeyboardAvoidingView, Alert, StatusBar } from 'react-native';
+import { Checkbox, TextInput, Button, IconButton } from 'react-native-paper';
 
 class Task extends React.Component {
   state = {
-    _id: 3,
     tarefas: [
       {_id: 1, descricao: 'Tomar café', checked: false}, 
       {_id: 2,descricao: 'Fazer caminhada', checked: true}
@@ -14,13 +13,16 @@ class Task extends React.Component {
   }
 
   _addtask = () => {
-    this.setState({_id: this.state._id + 1});
-    this.setState({tarefas: [...this.state.tarefas, 
-      {_id: this.state._id, descricao: this.state.texto, checked: false}
-    ]});
+    if (!this.state.texto) {
+      Alert.alert('É necessário digitar uma tarefa!');
+    } else {
+      this.setState({tarefas: [...this.state.tarefas, 
+        {_id: this.state.tarefas.length + 1, descricao: this.state.texto, checked: false}
+      ]});
 
-    this.setState({texto: ''});
-    ToastAndroid.show('Tarefa adicionada com sucesso!', ToastAndroid.SHORT);
+      this.setState({texto: ''});
+      ToastAndroid.show('Tarefa adicionada com sucesso!', ToastAndroid.SHORT);
+    }
   }
 
   _deletetask = (item) => {
@@ -41,23 +43,32 @@ class Task extends React.Component {
       if (task._id == item._id) {
         task.checked = !task.checked;
       }
-    })
+    }) 
 
-    this.setState({tarefas: this.tarefaAux});
+    this.setState({tarefas: tarefaAux});
   }
 
+  async _closeapp() {
+    this.props.navigation.navigate('AuthScreen');
+  }
+  
   _renderItem = ({item}) => (
     <View style={styles.taskContainer}>
       <Checkbox
         status={item.checked ? 'checked' : 'unchecked'}
         onPress={() => this._clickCheckBox(item)}
       />
-      <Text style={{textDecorationLine: item.checked ? 'line-through' : 'none'}}>{item._id}) {item.descricao}</Text>
+      
+      <View style={{flex: 2}} >
+        <Text style={{textDecorationLine: item.checked ? 'line-through' : 'none'}}>{item._id}) {item.descricao}</Text>  
+      </View>
+
       <Button 
-          style={{justifyContent: 'space-between'}}
+          style={{flexDirection: 'row-reverse'}}
           icon='delete' 
           mode='text'
           color='#666'
+          size={1000}
           compact={true}
           onPress={() => this._deletetask(item)}>
       </Button>
@@ -67,7 +78,16 @@ class Task extends React.Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <Text style={styles.titleText}>Tarefas</Text>
+        <View style={{flexDirection: 'row'}}>
+          <IconButton
+            style={{paddingTop: 15}}
+            icon="keyboard-arrow-left"
+            color='#000'
+            size={50}
+            onPress={() => this._closeapp()}
+          />
+          <Text style={styles.titleText}>Tarefas</Text>
+        </View>
         
         <View style={styles.lista}>
           <FlatList 
@@ -96,12 +116,6 @@ class Task extends React.Component {
           onPress={() => this._addtask()}>
           Adicionar
         </Button>
-
-        <FAB
-          style={styles.fab}
-          icon='keyboard-arrow-left'
-          onPress={() => this.props.navigation.navigate('AuthScreen')}
-        />
       </KeyboardAvoidingView>
     );
   }
@@ -114,17 +128,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     marginHorizontal: 10,
+    paddingTop: 15
   },
 
   titleText: {
     fontSize: 55,
-    marginTop: 15,
-    marginBottom: 15,
+    paddingBottom: 15,
     fontWeight: 'bold',
     alignSelf: 'center'
   },
 
+  lista: {
+    flex: 1,
+  },
+
   taskContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
   },
