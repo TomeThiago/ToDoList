@@ -2,7 +2,7 @@
 
 <h2>1. Fazer tela de login</h2>
     <h3>1.1. O primeiro "login" irá salvar as informações do usuário no localStorage</h3>
-    </h3>1.2. Os "logins" posteriores irão verificar as informações do usuário no localStorage</h3>
+    <h3>1.2. Os "logins" posteriores irão verificar as informações do usuário no localStorage</h3>
 <h2>2. Fazer tela do ToDo List</h2>
     <h3>2.1. Tela com:</h3>
         <h3>2.1.1. Uma FlatList que exibe as tarefas</h3>
